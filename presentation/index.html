@@ -61,14 +61,13 @@
           <ul>
             <li>Bit: 0 or 1</li>
             <li>Byte: 8 bits</li>
-            <li>Word: 16 bits (or 2 bytes)</li>
-            <li>Doubleword: 32 bits (or 4 bytes)</li>
-            <li>Quadword: 64 bits (or 8 bytes)</li>
+            <li>Word<span class='golden'>*</span>: 16 bits (or 2 bytes)</li>
+            <li>Doubleword<span class='golden'>*</span>: 32 bits (or 4 bytes)</li>
+            <li>Quadword<span class='golden'>*</span>: 64 bits (or 8 bytes)</li>
           </ul>
 
           <p>
-            Note: I lied. A "word" may be 16 or 32 bits depending on the tools used, the OS,
-            and the processor. So always specify in terms of bits / bytes if possible.
+            <span class='golden'>*</span>: Terminology differs. Use bits / bytes when possible.
           </p>
         </section>
         
