@@ -250,10 +250,6 @@
           </p>
         </section>
         <section>
-          <h2>EFLAGS register</h2>
-          <p>Holds state bits for the processor</p>
-        </section>
-        <section>
           <h2>Memory layout</h2>
           <img src='img/memory-layout2.png'>
         </section>
@@ -286,7 +282,6 @@ int main()
 	</section>
 	<section>
 	  <h2>Assembly instructions</h2>
-	  <p>Note: We use AT&T syntax</p>
 	</section>
 	<section>
 	  <h2>AT&T syntax</h2>
@@ -345,13 +340,13 @@ mov $0xdeadbeef, (%esp)
 	</section>
 	<section>
 	  <h2>POP r/m32</h2>
-	  <p>Push value onto stack</p>
+	  <p>Pop value from stack into register / memory</p>
 	  <pre>
 	    <code class='x86asm'>
-push $0xdeadbeef
+pop %eax
 ; equivalent to the following (assuming 4 byte values)
-sub $0x4, %esp
-mov $0xdeadbeef, (%esp)
+mov (%esp), %eax
+add $0x4, %esp
 	    </code>
 	  </pre>
 	</section>
@@ -401,7 +396,7 @@ mov $0xdeadbeef, (%esp)
         progress: true,
         history: true,
         center: true,
-        slideNumber: true,
+        slideNumber: 'c/t',
 
         transition: 'none', // none/fade/slide/convex/concave/zoom
         backgroundTransition: 'none',
