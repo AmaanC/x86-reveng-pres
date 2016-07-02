@@ -1,0 +1,12 @@
+span.golden {
+    background: rgba(255, 215, 0, 0.4);
+    border-radius: 10px;
+}
+
+.register {
+    text-align: center;
+}
+
+.register td {
+    border: 1px solid black !important;
+}

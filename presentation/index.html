@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Intro to x86 and Reverse Engineering</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    
+    <link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/simple.css" id="theme">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/googlecode.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+
+    <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="reveal">
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+        <section>
+          <h1>Intro to x86 and Reverse Engineering</h1>
+        </section>
+        
+        <section data-markdown>
+          ## Topics:
+
+          - Memory sizes (bits, bytes, words, etc.)
+          - Number representations (binary, hex, and 2's complement)
+          - Endianness
+          - Memory layout (stack, heap, etc.)
+          - Assembly instructions
+          - Reverse engineering tools
+        </section>
+        
+        <section>
+          <h2>Memory sizes</h2>
+
+          <ul>
+            <li>Bit: 0 or 1</li>
+            <li>Byte: 8 bits</li>
+            <li>Word: 16 bits (or 2 bytes)</li>
+            <li>Doubleword: 32 bits (or 4 bytes)</li>
+            <li>Quadword: 64 bits (or 8 bytes)</li>
+          </ul>
+
+          <p>
+            Note: I lied. A "word" may be 16 or 32 bits depending on the tools used, the OS,
+            and the processor. So always specify in terms of bits / bytes if possible.
+          </p>
+        </section>
+        
+        <section>
+          <h2>Number representations</h2>
+          <table style='font-size: 20px'>
+            <tr>
+              <th>Decimal (base 10)</th>
+              <th>Binary (base 2)</th>
+              <th>Hexadecimal (base 16)</th>
+            </tr>
+            <tr>
+              <td>00</td>
+              <td>0b0000</td>
+              <td>0x00</td>
+            </tr>
+            <tr>
+              <td>01</td>
+              <td>0b0001</td>
+              <td>0x01</td>
+            </tr>
+            <tr>
+              <td>02</td>
+              <td>0b0010</td>
+              <td>0x02</td>
+            </tr>
+            <tr>
+              <td>03</td>
+              <td>0b0011</td>
+              <td>0x03</td>
+            </tr>
+            <tr>
+              <td>04</td>
+              <td>0b0100</td>
+              <td>0x04</td>
+            </tr>
+            <tr>
+              <td>05</td>
+              <td>0b0101</td>
+              <td>0x05</td>
+            </tr>
+            <tr>
+              <td>06</td>
+              <td>0b0110</td>
+              <td>0x06</td>
+            </tr>
+            <tr>
+              <td>07</td>
+              <td>0b0111</td>
+              <td>0x07</td>
+            </tr>
+            <tr>
+              <td>08</td>
+              <td>0b1000</td>
+              <td>0x08</td>
+            </tr>
+            <tr>
+              <td>09</td>
+              <td>0b1001</td>
+              <td>0x09</td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td>0b1010</td>
+              <td>0x0A</td>
+            </tr>
+            <tr>
+              <td>11</td>
+              <td>0b1011</td>
+              <td>0x0B</td>
+            </tr>
+            <tr>
+              <td>12</td>
+              <td>0b1100</td>
+              <td>0x0C</td>
+            </tr>
+            <tr>
+              <td>13</td>
+              <td>0b1101</td>
+              <td>0x0D</td>
+            </tr>
+            <tr>
+              <td>14</td>
+              <td>0b1110</td>
+              <td>0x0E</td>
+            </tr>
+            <tr>
+              <td>15</td>
+              <td>0b1111</td>
+              <td>0x0F</td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          <h2>Endianness</h2>
+          <ul>
+            <li>Little Endian: LSB stored in lower addresses</li>
+            <li>Big Endian: LSB stored in higher addresses</li>
+          </ul>
+        </section>
+        <section>
+          <img src='img/endianness.png'>
+        </section>
+        <section>
+          <h2>Example</h2>
+          <pre>
+            <code data-trim data-noescape>
+(gdb) x/10xb main
+0x80489b0 &lt;main&gt;: 0x55    0x89    0xe5    0x83    0xec    0x14    0x53    0x8b
+0x80489b8 &lt;main+8&gt;:       0x45    0x08
+(gdb) x/10xw main
+0x80489b0 &lt;main&gt;: 0x83e58955      0x8b5314ec      0x5d8b0845      0x01f8830c
+0x80489c0 &lt;main+16&gt;:      0x48a10e75      0xa30804b6      0x0804b664      0xf68962eb
+0x80489d0 &lt;main+32&gt;:      0x7502f883      0xf8c4833b
+            </code>
+          </pre>
+        </section>
+        <section>
+          <h2>Registers</h2>
+          <p>Small and fast storage locations built into the processor, unlike RAM or external storage</p>
+        </section>
+        <section>
+          8+2 registers (and how they're conventionally used):
+          <br>
+          <ul>
+            <li><span class='golden'>eax</span>: Stores return values</li>
+            <li class='fragment'>ebx: Base pointer (eg. for array access)</li>
+            <li class='fragment'>ecx: Counter for loops</li>
+            <li class='fragment'>edx: I/O pointer</li>
+            <li class='fragment'>esi: Source pointer for string operations</li>
+            <li class='fragment'>edi: Destination pointer for string operations</li>
+            <li class='fragment'><span class='golden'>ebp</span>: Base pointer (bottom of stack)</li>
+            <li class='fragment'><span class='golden'>esp</span>: Stack pointer (top of stack)</li>
+            <li class='fragment'><span class='golden'>eip</span>: Instruction pointer</li>
+            <li class='fragment'>eflags: Flags about computations (zero, parity, sign)</li>
+          </ul>
+        </section>
+        <section>
+          <table border="1" cellspacing="0" cellpadding="2" class='register'>
+            <tbody><tr>
+                <td align="center" colspan="12" bgcolor="#004080">&nbsp;<br><font size="+2" color="#FFFFFF" face="Arial">traditional general purpose registers</font><br>&nbsp;</td>
+              </tr>
+              <tr>
+                <td width="18" align="center" bgcolor="#004080"><font color="#FFFFFF" face="Arial">6<br>3</font></td>
+                <td width="350" align="center" bgcolor="#004080"><font color="#FFFFFF" face="Arial">&nbsp;</font></td>
+                <td width="18" align="center" bgcolor="#004080"><font color="#FFFFFF" face="Arial">3<br>2</font></td>
+                <td width="18" align="center" bgcolor="#004080"><font color="#FFFFFF" face="Arial">3<br>1</font></td>
+                <td width="150" align="center" bgcolor="#004080"><font color="#FFFFFF" face="Arial">&nbsp;</font></td>
+                <td width="18" align="center" bgcolor="#004080"><font color="#FFFFFF" face="Arial">1<br>6</font></td>
+                <td width="18" align="center" bgcolor="#004080"><font color="#FFFFFF" face="Arial">1<br>5</font></td>
+                <td width="50" align="center" bgcolor="#004080"><font color="#FFFFFF" face="Arial">&nbsp;</font></td>
+                <td width="18" align="center" bgcolor="#004080"><font color="#FFFFFF" face="Arial">8</font></td>
+                <td width="18" align="center" bgcolor="#004080"><font color="#FFFFFF" face="Arial">7</font></td>
+                <td width="50" align="center" bgcolor="#004080"><font color="#FFFFFF" face="Arial">&nbsp;</font></td>
+                <td width="18" align="center" bgcolor="#004080"><font color="#FFFFFF" face="Arial">0</font></td>
+              </tr>
+              <tr>
+              </tr>
+              <tr>
+                <td align="center" colspan="12" bgcolor="#B0D0D0"><font face="Arial">RAX</font></td>
+              </tr>
+              <tr>
+                <td align="center" colspan="3" bgcolor="#008080"><font face="Arial">zero-extended</font></td>
+                <td align="center" colspan="9"><font face="Arial">EAX</font></td>
+              </tr>
+              <tr>
+                <td align="center" colspan="3" rowspan="2" bgcolor="#008080"><font face="Arial">preserved</font></td>
+                <td align="center" colspan="3" rowspan="2" bgcolor="#808080"><font face="Arial">preserved</font></td>
+                <td align="center" colspan="6"><font face="Arial">AX</font></td>
+              </tr>
+              <tr>
+                <td align="center" colspan="3"><font face="Arial">AH</font></td>
+                <td align="center" colspan="3"><font face="Arial">AL</font></td>
+              </tr>
+          </tbody></table>
+          <p>
+            <a href='http://www.sandpile.org/x86/gpr.htm'>http://www.sandpile.org/x86/gpr.htm</a>
+          </p>
+        </section>
+        <section>
+          <h2>EFLAGS register</h2>
+          <p>Holds state bits for the processor</p>
+        </section>
+        <section>
+          <h2>Memory layout</h2>
+          <img src='img/memory-layout2.png'>
+        </section>
+	<section>
+	  <h2>Stack frames</h2>
+	  <p><a href='http://eli.thegreenplace.net/2011/02/04/where-the-top-of-the-stack-is-on-x86/#id4'>http://eli.thegreenplace.net/2011/02/04/where-the-top-of-the-stack-is-on-x86/#id4</a></p>
+	</section>
+	<section>
+	  <pre>
+	    <code data-trim data-noescape>
+int foobar(int a, int b, int c)
+{
+    int xx = a + 2;
+    int yy = b + 3;
+    int zz = c + 4;
+    int sum = xx + yy + zz;
+
+    return xx * yy * zz + sum;
+}
+
+int main()
+{
+    return foobar(77, 88, 99);
+}
+	    </code>
+	  </pre>
+	</section>
+	<section>
+	  <img src='img/stackframe.png'>
+	</section>
+	<section>
+	  <h2>Assembly instructions</h2>
+	  <p>Note: We use AT&T syntax</p>
+	</section>
+	<section>
+	  <h2>AT&T syntax</h2>
+	  <p>OP source, destination</p>
+	</section>
+	<section>
+	  <h2>NOP</h2>
+	  <p>Do <em>nothing</em></p>
+	  <p class='fragment'>Generally used to pad / align bytes</p>
+	  <p class='fragment'>Bonus: Often used for NOP sleds to make exploits more reliable</p>
+	</section>
+	<section>
+	  <h2>MOV imm/r/m32, r/m32</h2>
+	  <p>Copy value to a register</p>
+	  <pre>
+	    <code class='x86asm'>
+; eax = 0xdeadbeef	      
+mov $0xdeadbeef, %eax
+; eax = ebx
+mov %ebx, %eax
+; *(eax+4) = 0xcafe
+mov $0xcafe, 0x4(eax)
+	    </code>
+	  </pre>
+	</section>
+	<section>
+	  <h2>r/m32 addressing form</h2>
+	  <p>This addressing form means you might see instructions in any of the following formats</p>
+	  <pre>
+	    <code class='x86asm'>
+; eax = ebx
+mov %ebx, %eax
+; *(eax) = ebx
+mov %ebx, (%eax)
+; *(eax+4) = ebx
+mov %ebx, 0x4(%eax)
+; *(eax+4+2*1) = ebx
+mov %ebx, 0x4(%eax, 2, 1)
+;         /  \      |  |
+;        /    \     v  v
+;       / disp \ index scale
+	    </code>
+	  </pre>
+	</section>
+	<section>
+	  <h2>PUSH imm/r/m32</h2>
+	  <p>Push value onto stack</p>
+	  <pre>
+	    <code class='x86asm'>
+push $0xdeadbeef
+; equivalent to the following (assuming 4 byte values)
+sub $0x4, %esp
+mov $0xdeadbeef, (%esp)
+	    </code>
+	  </pre>
+	</section>
+	<section>
+	  <h2>POP r/m32</h2>
+	  <p>Push value onto stack</p>
+	  <pre>
+	    <code class='x86asm'>
+push $0xdeadbeef
+; equivalent to the following (assuming 4 byte values)
+sub $0x4, %esp
+mov $0xdeadbeef, (%esp)
+	    </code>
+	  </pre>
+	</section>
+	<section>
+	  <h2>CALL</h2>
+	</section>
+	<section>
+	  <h2>RET</h2>
+	</section>
+	<section>
+	  <h2>JMP</h2>
+	</section>
+	<section>
+	  <h2>Reverse Engineering</h2>
+	  <p>Figuring things out when you don't have the source</p>
+	</section>
+	<section>
+	  <h2>Lay of the land</h2>
+	  <ul>
+	    <li><pre>file</pre></li>
+	    <li><pre>strings</pre></li>
+	    <li><pre>objdump -t</pre></li>
+	  </ul>
+	</section>
+	<section>
+	  <h2>Real deal</h2>
+	  <ul>
+	    <li><pre>objdump -d</pre></li>
+	    <li><pre>gdb</pre></li>
+	  </ul>
+	</section>
+	<section>
+	  <h1>Demo time!</h1>
+	</section>
+      </div>
+
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+
+      // More info https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: false,
+        progress: true,
+        history: true,
+        center: true,
+        slideNumber: true,
+
+        transition: 'none', // none/fade/slide/convex/concave/zoom
+        backgroundTransition: 'none',
+
+        // More info https://github.com/hakimel/reveal.js#dependencies
+        dependencies: [
+          { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'plugin/zoom-js/zoom.js', async: true },
+          { src: 'plugin/notes/notes.js', async: true }
+        ]
+      });
+
+    </script>
+
+  </body>
+</html>
