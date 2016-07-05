@@ -11,6 +11,20 @@ span.golden {
     border: 1px solid black !important;
 }
 
+.stack-frame {
+    border: none;
+    width: 800px;
+}
+
+.stack-frame td {
+    border: none !important;
+}
+
+.stack-frame td:nth-child(2) {
+    text-align: center;
+    border: 1px solid black !important;
+}
+
 .reveal pre code {
     max-height: 95%;
 }

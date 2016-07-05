@@ -283,7 +283,52 @@ int main()
 	  </pre>
 	</section>
 	<section>
-	  <img src='img/stackframe.png'>
+	  <table class='stack-frame'>
+	    <tr>
+	      <td>higher addresses</td>
+	      <td style='background-color: #9f8d62'>&nbsp;</td>
+	    </tr>
+	    <tr>
+	      <td>EBP + 16</td>
+	      <td style='background-color: #cadaa9'>c</td>
+	    </tr>
+	    <tr>
+	      <td>EBP + 12</td>
+	      <td style='background-color: #cadaa9'>b</td>
+	    </tr>
+	    <tr>
+	      <td>EBP + 8</td>
+	      <td style='background-color: #cadaa9'>a</td>
+	    </tr>
+	    <tr>
+	      <td>EBP + 4</td>
+	      <td style='background-color: #cadaa9'>return address</td>
+	    </tr>
+	    <tr>
+	      <td>EBP</td>
+	      <td style='background-color: #e8eef7'>saved ebp</td>
+	    </tr>
+	    <tr>
+	      <td>EBP - 4</td>
+	      <td style='background-color: #e8eef7'>xx</td>
+	    </tr>
+	    <tr>
+	      <td>EBP - 8</td>
+	      <td style='background-color: #e8eef7'>yy</td>
+	    </tr>
+	    <tr>
+	      <td>EBP - 12</td>
+	      <td style='background-color: #e8eef7'>zz</td>
+	    </tr>
+	    <tr>
+	      <td>EBP - 16</td>
+	      <td style='background-color: #e8eef7'>sum</td>
+	    </tr>
+	    <tr rowspan='2'>
+	      <td>lower addresses</td>
+	      <td style='background-color: #ffffff'>&nbsp;</td>
+	    </tr>
+	  </table>
 	</section>
 	<section>
 	  <h2>Calling conventions</h2>
