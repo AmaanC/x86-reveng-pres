@@ -12,7 +12,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     
-    <link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css">
     <link rel="stylesheet" href="css/reveal.css">
     <link rel="stylesheet" href="css/theme/simple.css" id="theme">
     <link rel="stylesheet" href="css/custom.css">
@@ -43,19 +42,26 @@
         <section>
           <h1>Intro to x86 and Reverse Engineering</h1>
         </section>
-        
-        <section data-markdown>
-          ## Topics:
 
-          - Memory sizes (bits, bytes, words, etc.)
-          - Number representations (binary, hex, and 2's complement)
-          - Endianness
-          - Memory layout (stack, heap, etc.)
-          - Assembly instructions
-          - Reverse engineering tools
+        <section>
+          <h3 style="color: #F44336; text-decoration: line-through; font-weight: bold;">deep internal insight</h3>
+          <h3 style="color: #4CAF50; font-weight: bold;">overview of interesting things</h3>
         </section>
         
-        <section>
+        <section class='S'>
+          <h2>Topics:</h2>
+
+	  <ul>
+            <li>Memory sizes (bits, bytes, words, etc.)</li>
+            <li>Number representations (binary, hex, and 2's complement)</li>
+            <li>Endianness</li>
+            <li>Memory layout (stack, heap, etc.)</li>
+            <li>Assembly instructions</li>
+            <li>Reverse engineering tools</li>
+	  </ul>
+        </section>
+        
+        <section class='S'>
           <h2>Memory sizes</h2>
 
           <ul>
@@ -71,7 +77,7 @@
           </p>
         </section>
         
-        <section>
+        <section class='S'>
           <h2>Number representations</h2>
           <table style='font-size: 20px'>
             <tr>
@@ -174,13 +180,13 @@
         </section>
         <section>
           <h2>Example</h2>
-          <pre>
+          <pre class='smaller3'>
             <code data-trim data-noescape>
 (gdb) x/10xb main
-0x80489b0 &lt;main&gt;: 0x55    0x89    0xe5    0x83    0xec    0x14    0x53    0x8b
+0x80489b0 &lt;main&gt;:         <span class='golden'>0x55    0x89    0xe5    0x83</span>    0xec    0x14    0x53    0x8b
 0x80489b8 &lt;main+8&gt;:       0x45    0x08
 (gdb) x/10xw main
-0x80489b0 &lt;main&gt;: 0x83e58955      0x8b5314ec      0x5d8b0845      0x01f8830c
+0x80489b0 &lt;main&gt;:         <span class='golden'>0x83e58955</span>      0x8b5314ec      0x5d8b0845      0x01f8830c
 0x80489c0 &lt;main+16&gt;:      0x48a10e75      0xa30804b6      0x0804b664      0xf68962eb
 0x80489d0 &lt;main+32&gt;:      0x7502f883      0xf8c4833b
             </code>
@@ -257,7 +263,7 @@
 	  <p><a href='http://eli.thegreenplace.net/2011/02/04/where-the-top-of-the-stack-is-on-x86/#id4'>http://eli.thegreenplace.net/2011/02/04/where-the-top-of-the-stack-is-on-x86/#id4</a></p>
 	</section>
 	<section>
-	  <pre>
+	  <pre style='font-size: 0.9em !important'>
 	    <code data-trim data-noescape>
 int foobar(int a, int b, int c)
 {
@@ -280,11 +286,30 @@ int main()
 	  <img src='img/stackframe.png'>
 	</section>
 	<section>
+	  <h2>Calling conventions</h2>
+	  <a href='https://www.cs.virginia.edu/~evans/cs216/guides/x86.html'>https://www.cs.virginia.edu/~evans/cs216/guides/x86.html</a>
+	</section>
+	<section>
+	  <pre>
+	    <code data-trim data-noescape class='x86asm'>
+push   %ecx	      
+add    $0xfffffff8,%esp
+push   $0x8049620
+mov    0x4(%ebx),%eax
+push   %eax
+call   8048880 &lt;fopen@plt&gt;
+mov    %eax,0x804b664
+add    $0x10,%esp
+pop    %ecx
+	    </code>
+	  </pre>
+	</section>
+	<section>
 	  <h2>Assembly instructions</h2>
 	</section>
 	<section>
 	  <h2>AT&T syntax</h2>
-	  <p>OP source, destination</p>
+	  <code>OP source, destination</code>
 	</section>
 	<section>
 	  <h2>NOP</h2>
@@ -295,6 +320,8 @@ int main()
 	<section>
 	  <h2>MOV imm/r/m32, r/m32</h2>
 	  <p>Copy value to a register</p>
+	</section>
+	<section>
 	  <pre>
 	    <code class='x86asm'>
 ; eax = 0xdeadbeef	      
@@ -308,16 +335,24 @@ mov $0xcafe, 0x4(eax)
 	</section>
 	<section>
 	  <h2>r/m32 addressing form</h2>
-	  <p>This addressing form means you might see instructions in any of the following formats</p>
-	  <pre>
+	  <p>All of the following formats are valid</p>
+	</section>
+	<section>
+	  <pre class='smaller3'>
 	    <code class='x86asm'>
 ; eax = ebx
 mov %ebx, %eax
+
 ; *(eax) = ebx
 mov %ebx, (%eax)
+
 ; *(eax+4) = ebx
 mov %ebx, 0x4(%eax)
+
 ; *(eax+4+2*1) = ebx
+;             base
+;              |
+;              v
 mov %ebx, 0x4(%eax, 2, 1)
 ;         /  \      |  |
 ;        /    \     v  v
@@ -328,10 +363,13 @@ mov %ebx, 0x4(%eax, 2, 1)
 	<section>
 	  <h2>PUSH imm/r/m32</h2>
 	  <p>Push value onto stack</p>
+	</section>
+	<section>
 	  <pre>
 	    <code class='x86asm'>
 push $0xdeadbeef
-; equivalent to the following (assuming 4 byte values)
+; equivalent to the following
+; (assuming 4 byte values)
 sub $0x4, %esp
 mov $0xdeadbeef, (%esp)
 	    </code>
@@ -340,26 +378,58 @@ mov $0xdeadbeef, (%esp)
 	<section>
 	  <h2>POP r/m32</h2>
 	  <p>Pop value from stack into register / memory</p>
+	</section>
+	<section>
 	  <pre>
 	    <code class='x86asm'>
 pop %eax
-; equivalent to the following (assuming 4 byte values)
+; equivalent to the following
+; (assuming 4 byte values)
 mov (%esp), %eax
 add $0x4, %esp
 	    </code>
 	  </pre>
 	</section>
 	<section>
-	  <h2>CALL</h2>
+	  <h2>CALL imm/r/m32</h2>
+	  <p>Push return address to stack and jump to procedure</p>
+	</section>
+	<section>
+	  <pre>
+	    <code data-trim data-noescape class='x86asm'>
+; call function phase_1 using
+; immediate value
+call $0x8048b20 &lt;phase_1&gt;
+; call function pointer
+call (%eax)
+	    </code>
+	  </pre>
 	</section>
 	<section>
 	  <h2>RET</h2>
+	  <p>Pop return address from stack and jump back</p>
 	</section>
 	<section>
 	  <h2>JMP</h2>
+	  <p>Jump to a certain address (using EFLAGS as necessary)</p>
+	  <p>Used for branching operations (conditions, loops, etc.)</p>
 	</section>
 	<section>
-	  <h2>Reverse Engineering</h2>
+	  <pre>
+	    <code data-trim data-noescape class='x86asm'>
+; Unconditional jump to 0x8048b20
+jmp $0x8048b50
+
+; Compare ebx to 5 and update
+; the eflags register
+cmp    $0x5, %ebx
+; Conditional jump
+jle    $0x8048b76 &lt;phase_2+0x2e&gt;
+	    </code>
+	  </pre>
+	</section>
+	<section>
+	  <h1>Reverse Engineering</h1>
 	  <p>Figuring things out when you don't have the source</p>
 	</section>
 	<section>
@@ -378,7 +448,7 @@ add $0x4, %esp
 	  </ul>
 	</section>
 	<section>
-	  <h1>Demo time!</h1>
+	  <h2>Demo time!</h2>
 	</section>
       </div>
 
@@ -399,6 +469,10 @@ add $0x4, %esp
 
         transition: 'none', // none/fade/slide/convex/concave/zoom
         backgroundTransition: 'none',
+
+        margin: 0.0,
+        width: 1280,
+        height: 720,
 
         // More info https://github.com/hakimel/reveal.js#dependencies
         dependencies: [

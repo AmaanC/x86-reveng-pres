@@ -10,3 +10,58 @@ span.golden {
 .register td {
     border: 1px solid black !important;
 }
+
+.reveal pre code {
+    max-height: 95%;
+}
+
+
+pre.bigger {
+    font-size: 1.4em !important;
+}
+
+pre:not(.smaller) {
+    font-size: 1.4em !important;
+}
+
+pre.smaller2 {
+    font-size: 1.1em !important;
+}
+
+pre.smaller3 {
+    font-size: .7em !important;
+}
+
+pre.bigger15 {
+    font-size: 1.75em !important;
+}
+
+pre.bigger2 {
+    font-size: 2em !important;
+}
+
+pre.bigger3 {
+    font-size: 3em !important;
+}
+
+pre.mediumer {
+    font-size: 1.2em !important;
+}
+
+
+section.bigger h1 {
+    font-size: 6em;
+}
+
+section.bigger h2 {
+    font-size: 4em;
+}
+
+section.bigger h3 {
+    font-size: 2em;
+}
+
+section.bigger ul {
+    font-size: 3em;
+    line-height: 1em;
+}
