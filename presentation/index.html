@@ -359,8 +359,8 @@ pop    %ecx
 	<section>
 	  <h2>NOP</h2>
 	  <p>Do <em>nothing</em></p>
-	  <p class='fragment'>Generally used to pad / align bytes</p>
-	  <p class='fragment'>Bonus: Often used for NOP sleds to make exploits more reliable</p>
+	  <p>Generally used to pad / align bytes</p>
+	  <p>Bonus: Often used for NOP sleds to make exploits more reliable</p>
 	</section>
 	<section>
 	  <h2>MOV imm/r/m32, r/m32</h2>
@@ -383,8 +383,7 @@ mov $0xcafe, 0x4(eax)
 	  <p>All of the following formats are valid</p>
 	</section>
 	<section>
-	  <pre class='smaller3'>
-	    <code class='x86asm'>
+	  <pre class='smaller3'><code class='x86asm'>
 ; eax = ebx
 mov %ebx, %eax
 
