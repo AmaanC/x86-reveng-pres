@@ -256,7 +256,48 @@
         </section>
         <section>
           <h2>Memory layout</h2>
-          <img src='img/memory-layout2.png'>
+	</section>
+	<section>
+          <!-- <img src='img/memory-layout2.png'> -->
+	  
+	  <table class='memory-layout'>
+	    <tr>
+	      <td>Kernel space</td>
+	      <td class='address-marker'>0xc0000000</td>
+	    </tr>
+	    <tr>
+	      <td>Stack</td>
+	      <td style='font-size: 2em;'>↓</td>
+	    </tr>
+	    <tr>
+	      <td style='background-color: white;'>&nbsp;</td>
+	    </tr>
+	    <tr>
+	      <td>Heap</td>
+	      <td style='font-size: 2em;'>↑</td>
+	    </tr>
+	    <tr>
+	      <td>
+		.bss segment<br>(initialized global variables)
+	      </td>
+	    </tr>
+	    <tr>
+	      <td>
+		.data segment<br>(uninitialized global variables)
+	      </td>
+	    </tr>
+	    <tr>
+	      <td>
+		.text segment<br>(code)
+	      </td>
+	      <td class='address-marker'>0x08048000</td>
+	    </tr>
+	    <tr>
+	      <td style='background-color: white;'>&nbsp;</td>
+	      <td class='address-marker'>0x00000000</td>
+	    </tr>
+	  </table>
+	  
         </section>
 	<section>
 	  <h2>Stack frames</h2>

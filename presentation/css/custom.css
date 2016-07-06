@@ -25,6 +25,33 @@ span.golden {
     border: 1px solid black !important;
 }
 
+
+.memory-layout {
+    border: none;
+    width: 800px;
+    font-size: 0.9em !important;
+}
+
+.memory-layout td {
+    border: none !important;
+}
+
+.memory-layout td:nth-child(1) {
+    text-align: center;
+    border: 1px solid black !important;
+    background-color: #FFF582;
+}
+
+.memory-layout .address-marker {
+    border-bottom: 1px solid black !important;
+    vertical-align: bottom;
+}
+
+/* .memory-layout td:nth-child(2) { */
+/*     text-align: center; */
+/*     border-bottom: 1px solid black !important; */
+/* } */
+
 .reveal pre code {
     max-height: 95%;
 }
