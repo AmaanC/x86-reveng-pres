@@ -167,7 +167,25 @@
             </tr>
           </table>
         </section>
-
+	<section>
+	  <h2>Negative numbers (4 bits)</h2>
+	  <ul>
+	    <li>1's complement: Flip every bit</li>
+	    <p>Eg. ~0b0101 = 0b1010</p>
+	    <li>2's complement: 1's complement + 1</li>
+	    <p>Eg. -0b0101 = 0b1010 + 1 = 0b1011</p>
+	  </ul>
+	</section>
+	<section>
+	  <h2>Examples (1 byte)</h2>
+	  <pre>
+       1    = 0x01 = 0b0000 0001
+      -1    = 0xff = 0b1111 1111
+       127  = 0x7f = 0b0111 1111
+      -127  = 0x81 = 0b1000 0001
+	  </pre>
+	  <p>In C, the types <code>short</code>, <code>char</code>, <code>int8_t</code> are 8 bits / 1 byte long</p>
+	</section>
         <section>
           <h2>Endianness</h2>
           <ul>
