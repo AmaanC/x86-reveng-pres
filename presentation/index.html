@@ -272,142 +272,6 @@
             <a href='http://www.sandpile.org/x86/gpr.htm'>http://www.sandpile.org/x86/gpr.htm</a>
           </p>
         </section>
-        <section>
-          <h2>Memory layout</h2>
-	</section>
-	<section>
-          <!-- <img src='img/memory-layout2.png'> -->
-	  
-	  <table class='memory-layout'>
-	    <tr>
-	      <td>Kernel space</td>
-	      <td class='address-marker'>0xc0000000</td>
-	    </tr>
-	    <tr>
-	      <td>Stack</td>
-	      <td style='font-size: 2em;'>↓</td>
-	    </tr>
-	    <tr>
-	      <td style='background-color: white;'>&nbsp;</td>
-	    </tr>
-	    <tr>
-	      <td>Heap</td>
-	      <td style='font-size: 2em;'>↑</td>
-	    </tr>
-	    <tr>
-	      <td>
-		.bss segment<br>(uninitialized global variables)
-	      </td>
-	    </tr>
-	    <tr>
-	      <td>
-		.data segment<br>(initialized global variables)
-	      </td>
-	    </tr>
-	    <tr>
-	      <td>
-		.text segment<br>(code)
-	      </td>
-	      <td class='address-marker'>0x08048000</td>
-	    </tr>
-	    <tr>
-	      <td style='background-color: white;'>&nbsp;</td>
-	      <td class='address-marker'>0x00000000</td>
-	    </tr>
-	  </table>
-	  
-        </section>
-	<section>
-	  <h2>Stack frames</h2>
-	  <p><a href='http://eli.thegreenplace.net/2011/02/04/where-the-top-of-the-stack-is-on-x86/#id4'>http://eli.thegreenplace.net/2011/02/04/where-the-top-of-the-stack-is-on-x86/#id4</a></p>
-	</section>
-	<section>
-	  <pre style='font-size: 0.9em !important'>
-	    <code data-trim data-noescape>
-int foobar(int a, int b, int c)
-{
-    int xx = a + 2;
-    int yy = b + 3;
-    int zz = c + 4;
-    int sum = xx + yy + zz;
-
-    return xx * yy * zz + sum;
-}
-
-int main()
-{
-    return foobar(77, 88, 99);
-}
-	    </code>
-	  </pre>
-	</section>
-	<section>
-	  <table class='stack-frame'>
-	    <tr>
-	      <td>higher addresses</td>
-	      <td style='background-color: #9f8d62'>&nbsp;</td>
-	    </tr>
-	    <tr>
-	      <td>EBP + 16</td>
-	      <td style='background-color: #cadaa9'>c</td>
-	    </tr>
-	    <tr>
-	      <td>EBP + 12</td>
-	      <td style='background-color: #cadaa9'>b</td>
-	    </tr>
-	    <tr>
-	      <td>EBP + 8</td>
-	      <td style='background-color: #cadaa9'>a</td>
-	    </tr>
-	    <tr>
-	      <td>EBP + 4</td>
-	      <td style='background-color: #cadaa9'>return address</td>
-	    </tr>
-	    <tr>
-	      <td>EBP</td>
-	      <td style='background-color: #e8eef7'>saved ebp</td>
-	    </tr>
-	    <tr>
-	      <td>EBP - 4</td>
-	      <td style='background-color: #e8eef7'>xx</td>
-	    </tr>
-	    <tr>
-	      <td>EBP - 8</td>
-	      <td style='background-color: #e8eef7'>yy</td>
-	    </tr>
-	    <tr>
-	      <td>EBP - 12</td>
-	      <td style='background-color: #e8eef7'>zz</td>
-	    </tr>
-	    <tr>
-	      <td>EBP - 16</td>
-	      <td style='background-color: #e8eef7'>sum</td>
-	    </tr>
-	    <tr rowspan='2'>
-	      <td>lower addresses</td>
-	      <td style='background-color: #ffffff'>&nbsp;</td>
-	    </tr>
-	  </table>
-	</section>
-	<section>
-	  <h2>Calling conventions</h2>
-	  <a href='https://www.cs.virginia.edu/~evans/cs216/guides/x86.html'>https://www.cs.virginia.edu/~evans/cs216/guides/x86.html</a>
-	</section>
-	<section>
-	  <pre>
-	    <code data-trim data-noescape class='x86asm'>
-push   %ecx	      
-add    $0xfffffff8,%esp
-push   $0x8049620
-mov    0x4(%ebx),%eax
-push   %eax
-call   8048880 &lt;fopen@plt&gt;
-mov    %eax,0x804b664
-add    $0x10,%esp
-pop    %ecx
-	    </code>
-	  </pre>
-	</section>
 	<section>
 	  <h2>Assembly instructions</h2>
 	</section>
@@ -530,6 +394,142 @@ cmp    $0x5, %ebx
 jle    $0x8048b76 &lt;phase_2+0x2e&gt;
 	    </code>
 	  </pre>
+	</section>
+	<section>
+	  <h2>Calling conventions</h2>
+	  <a href='https://www.cs.virginia.edu/~evans/cs216/guides/x86.html'>https://www.cs.virginia.edu/~evans/cs216/guides/x86.html</a>
+	</section>
+	<section>
+	  <pre>
+	    <code data-trim data-noescape class='x86asm'>
+push   %ecx	      
+add    $0xfffffff8,%esp
+push   $0x8049620
+mov    0x4(%ebx),%eax
+push   %eax
+call   8048880 &lt;fopen@plt&gt;
+mov    %eax,0x804b664
+add    $0x10,%esp
+pop    %ecx
+	    </code>
+	  </pre>
+	</section>
+        <section>
+          <h2>Memory layout</h2>
+	</section>
+	<section>
+          <!-- <img src='img/memory-layout2.png'> -->
+	  
+	  <table class='memory-layout'>
+	    <tr>
+	      <td>Kernel space</td>
+	      <td class='address-marker'>0xc0000000</td>
+	    </tr>
+	    <tr>
+	      <td>Stack</td>
+	      <td style='font-size: 2em;'>↓</td>
+	    </tr>
+	    <tr>
+	      <td style='background-color: white;'>&nbsp;</td>
+	    </tr>
+	    <tr>
+	      <td>Heap</td>
+	      <td style='font-size: 2em;'>↑</td>
+	    </tr>
+	    <tr>
+	      <td>
+		.bss segment<br>(uninitialized global variables)
+	      </td>
+	    </tr>
+	    <tr>
+	      <td>
+		.data segment<br>(initialized global variables)
+	      </td>
+	    </tr>
+	    <tr>
+	      <td>
+		.text segment<br>(code)
+	      </td>
+	      <td class='address-marker'>0x08048000</td>
+	    </tr>
+	    <tr>
+	      <td style='background-color: white;'>&nbsp;</td>
+	      <td class='address-marker'>0x00000000</td>
+	    </tr>
+	  </table>
+	  
+        </section>
+	<section>
+	  <h2>Stack frames</h2>
+	  <p><a href='http://eli.thegreenplace.net/2011/02/04/where-the-top-of-the-stack-is-on-x86/#id4'>http://eli.thegreenplace.net/2011/02/04/where-the-top-of-the-stack-is-on-x86/#id4</a></p>
+	</section>
+	<section>
+	  <pre style='font-size: 0.9em !important'>
+	    <code data-trim data-noescape>
+int foobar(int a, int b, int c)
+{
+    int xx = a + 2;
+    int yy = b + 3;
+    int zz = c + 4;
+    int sum = xx + yy + zz;
+
+    return xx * yy * zz + sum;
+}
+
+int main()
+{
+    return foobar(77, 88, 99);
+}
+	    </code>
+	  </pre>
+	</section>
+	<section>
+	  <table class='stack-frame'>
+	    <tr>
+	      <td>higher addresses</td>
+	      <td style='background-color: #9f8d62'>&nbsp;</td>
+	    </tr>
+	    <tr>
+	      <td>EBP + 16</td>
+	      <td style='background-color: #cadaa9'>c</td>
+	    </tr>
+	    <tr>
+	      <td>EBP + 12</td>
+	      <td style='background-color: #cadaa9'>b</td>
+	    </tr>
+	    <tr>
+	      <td>EBP + 8</td>
+	      <td style='background-color: #cadaa9'>a</td>
+	    </tr>
+	    <tr>
+	      <td>EBP + 4</td>
+	      <td style='background-color: #cadaa9'>return address</td>
+	    </tr>
+	    <tr>
+	      <td>EBP</td>
+	      <td style='background-color: #e8eef7'>saved ebp</td>
+	    </tr>
+	    <tr>
+	      <td>EBP - 4</td>
+	      <td style='background-color: #e8eef7'>xx</td>
+	    </tr>
+	    <tr>
+	      <td>EBP - 8</td>
+	      <td style='background-color: #e8eef7'>yy</td>
+	    </tr>
+	    <tr>
+	      <td>EBP - 12</td>
+	      <td style='background-color: #e8eef7'>zz</td>
+	    </tr>
+	    <tr>
+	      <td>EBP - 16</td>
+	      <td style='background-color: #e8eef7'>sum</td>
+	    </tr>
+	    <tr rowspan='2'>
+	      <td>lower addresses</td>
+	      <td style='background-color: #ffffff'>&nbsp;</td>
+	    </tr>
+	  </table>
 	</section>
 	<section>
 	  <h1>Reverse Engineering</h1>
