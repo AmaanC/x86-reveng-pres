@@ -277,7 +277,7 @@
 	</section>
 	<section>
 	  <h2>AT&T syntax</h2>
-	  <code>OP source, destination</code>
+	  <code>MNEMONIC source, destination</code>
 	</section>
 	<section>
 	  <h2>NOP</h2>
@@ -327,6 +327,51 @@ mov %ebx, 0x4(%eax, 2, 1)
 	    </code>
 	  </pre>
 	</section>
+        <section>
+          <h2>Memory layout</h2>
+	</section>
+	<section>
+          <!-- <img src='img/memory-layout2.png'> -->
+	  
+	  <table class='memory-layout'>
+	    <tr>
+	      <td>Kernel space</td>
+	      <td class='address-marker'>0xc0000000</td>
+	    </tr>
+	    <tr>
+	      <td>Stack</td>
+	      <td style='font-size: 2em;' class='golden-text'>↓</td>
+	    </tr>
+	    <tr>
+	      <td style='background-color: white;'>&nbsp;</td>
+	    </tr>
+	    <tr>
+	      <td>Heap</td>
+	      <td style='font-size: 2em;' class='golden-text'>↑</td>
+	    </tr>
+	    <tr>
+	      <td>
+		.bss segment<br>(uninitialized global variables)
+	      </td>
+	    </tr>
+	    <tr>
+	      <td>
+		.data segment<br>(initialized global variables)
+	      </td>
+	    </tr>
+	    <tr>
+	      <td>
+		.text segment<br>(code)
+	      </td>
+	      <td class='address-marker'>0x08048000</td>
+	    </tr>
+	    <tr>
+	      <td style='background-color: white;'>&nbsp;</td>
+	      <td class='address-marker'>0x00000000</td>
+	    </tr>
+	  </table>
+	  
+        </section>
 	<section>
 	  <h2>PUSH imm/r/m32</h2>
 	  <p>Push value onto stack</p>
@@ -414,51 +459,6 @@ pop    %ecx
 	    </code>
 	  </pre>
 	</section>
-        <section>
-          <h2>Memory layout</h2>
-	</section>
-	<section>
-          <!-- <img src='img/memory-layout2.png'> -->
-	  
-	  <table class='memory-layout'>
-	    <tr>
-	      <td>Kernel space</td>
-	      <td class='address-marker'>0xc0000000</td>
-	    </tr>
-	    <tr>
-	      <td>Stack</td>
-	      <td style='font-size: 2em;'>↓</td>
-	    </tr>
-	    <tr>
-	      <td style='background-color: white;'>&nbsp;</td>
-	    </tr>
-	    <tr>
-	      <td>Heap</td>
-	      <td style='font-size: 2em;'>↑</td>
-	    </tr>
-	    <tr>
-	      <td>
-		.bss segment<br>(uninitialized global variables)
-	      </td>
-	    </tr>
-	    <tr>
-	      <td>
-		.data segment<br>(initialized global variables)
-	      </td>
-	    </tr>
-	    <tr>
-	      <td>
-		.text segment<br>(code)
-	      </td>
-	      <td class='address-marker'>0x08048000</td>
-	    </tr>
-	    <tr>
-	      <td style='background-color: white;'>&nbsp;</td>
-	      <td class='address-marker'>0x00000000</td>
-	    </tr>
-	  </table>
-	  
-        </section>
 	<section>
 	  <h2>Stack frames</h2>
 	  <p><a href='http://eli.thegreenplace.net/2011/02/04/where-the-top-of-the-stack-is-on-x86/#id4'>http://eli.thegreenplace.net/2011/02/04/where-the-top-of-the-stack-is-on-x86/#id4</a></p>
@@ -549,9 +549,6 @@ int main()
 	    <li><pre>objdump -d</pre></li>
 	    <li><pre>gdb</pre></li>
 	  </ul>
-	</section>
-	<section>
-	  <h1>Demo time!</h1>
 	</section>
       </div>
 

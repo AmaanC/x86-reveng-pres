@@ -3,6 +3,10 @@ span.golden {
     border-radius: 10px;
 }
 
+.golden-text {
+    color: rgb(255, 215, 0);
+}
+
 .register {
     text-align: center;
 }
@@ -46,11 +50,6 @@ span.golden {
     border-bottom: 1px solid black !important;
     vertical-align: bottom;
 }
-
-/* .memory-layout td:nth-child(2) { */
-/*     text-align: center; */
-/*     border-bottom: 1px solid black !important; */
-/* } */
 
 .reveal pre code {
     max-height: 95%;
